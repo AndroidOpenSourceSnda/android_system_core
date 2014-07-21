@@ -66,6 +66,9 @@ typedef enum {
     AUDIO_SOURCE_CAMCORDER           = 5,
     AUDIO_SOURCE_VOICE_RECOGNITION   = 6,
     AUDIO_SOURCE_VOICE_COMMUNICATION = 7,
+#ifdef STE_FM
+    AUDIO_SOURCE_FM_RADIO_RX         = 8,
+#endif
 #ifdef STE_AUDIO
     AUDIO_SOURCE_VIDEO_CALL          = 9, /* Audio source to be used for VT-call */
 #endif
@@ -326,6 +329,9 @@ typedef enum {
     AUDIO_DEVICE_OUT_USB_ACCESSORY             = 0x2000,
     AUDIO_DEVICE_OUT_USB_DEVICE                = 0x4000,
     AUDIO_DEVICE_OUT_DEFAULT                   = 0x8000,
+#ifdef STE_FM
+    AUDIO_DEVICE_OUT_FM_TX                     = 0x40000000,/*Bit used from input devices */
+#endif
     AUDIO_DEVICE_OUT_ALL      = (AUDIO_DEVICE_OUT_EARPIECE |
                                  AUDIO_DEVICE_OUT_SPEAKER |
                                  AUDIO_DEVICE_OUT_WIRED_HEADSET |
@@ -341,6 +347,9 @@ typedef enum {
                                  AUDIO_DEVICE_OUT_DGTL_DOCK_HEADSET |
                                  AUDIO_DEVICE_OUT_USB_ACCESSORY |
                                  AUDIO_DEVICE_OUT_USB_DEVICE |
+#ifdef STE_FM
+                                 AUDIO_DEVICE_OUT_FM_TX |
+#endif
                                  AUDIO_DEVICE_OUT_DEFAULT),
     AUDIO_DEVICE_OUT_ALL_A2DP = (AUDIO_DEVICE_OUT_BLUETOOTH_A2DP |
                                  AUDIO_DEVICE_OUT_BLUETOOTH_A2DP_HEADPHONES |
@@ -360,6 +369,10 @@ typedef enum {
     AUDIO_DEVICE_IN_AUX_DIGITAL           = 0x200000,
     AUDIO_DEVICE_IN_VOICE_CALL            = 0x400000,
     AUDIO_DEVICE_IN_BACK_MIC              = 0x800000,
+#ifdef STE_FM
+    AUDIO_DEVICE_IN_FM_RX                 = 0x1000000,
+  /*AUDIO_DEVICE_OUT_FM_TX                = 0x40000000,*/ /* Do not use this bit as it has been used in FM_TX Device */
+#endif
     AUDIO_DEVICE_IN_DEFAULT               = 0x80000000,
 
     AUDIO_DEVICE_IN_ALL     = (AUDIO_DEVICE_IN_COMMUNICATION |
@@ -370,6 +383,9 @@ typedef enum {
                                AUDIO_DEVICE_IN_AUX_DIGITAL |
                                AUDIO_DEVICE_IN_VOICE_CALL |
                                AUDIO_DEVICE_IN_BACK_MIC |
+#ifdef STE_FM
+                               AUDIO_DEVICE_IN_FM_RX |
+#endif
                                AUDIO_DEVICE_IN_DEFAULT),
     AUDIO_DEVICE_IN_ALL_SCO = AUDIO_DEVICE_IN_BLUETOOTH_SCO_HEADSET,
 } audio_devices_t;
