@@ -63,10 +63,25 @@ typedef enum {
     AUDIO_SOURCE_CAMCORDER           = 5,
     AUDIO_SOURCE_VOICE_RECOGNITION   = 6,
     AUDIO_SOURCE_VOICE_COMMUNICATION = 7,
+#ifdef STE_AUDIO
+    AUDIO_SOURCE_VIDEO_CALL          = 9, /* Audio source to be used for VT-call */
+#endif
 
     AUDIO_SOURCE_CNT,
     AUDIO_SOURCE_MAX                 = AUDIO_SOURCE_CNT - 1,
 } audio_source_t;
+
+#ifdef STE_AUDIO
+// AUDIO_INPUT_CLIENT_ID_BASE provide a means to refer to client Id´s not explicitly defined in the enum audio_input_clients
+typedef enum audio_input_clients {
+        AUDIO_INPUT_CLIENT_ID1 = 0x1,
+        AUDIO_INPUT_CLIENT_ID2 = 0x2,
+        AUDIO_INPUT_CLIENT_ID3 = 0x3,
+        AUDIO_INPUT_CLIENT_ID4 = 0x4,
+        AUDIO_INPUT_CLIENT_PLAYBACK = 0x80000000, // request client of playback type
+        AUDIO_INPUT_CLIENT_RECORD = 0x80000001   // request client of recording type
+} audio_input_clients;
+#endif
 
 /* special audio session values
  * (XXX: should this be living in the audio effects land?)
@@ -138,6 +153,21 @@ typedef enum {
     AUDIO_FORMAT_HE_AAC_V1           = 0x05000000UL,
     AUDIO_FORMAT_HE_AAC_V2           = 0x06000000UL,
     AUDIO_FORMAT_VORBIS              = 0x07000000UL,
+#ifdef STE_AUDIO
+    /* ST-E support for extended audio formats */
+    AUDIO_FORMAT_AC3                 = 0x08000000UL,
+    AUDIO_FORMAT_MPEG1               = 0x09000000UL,
+    AUDIO_FORMAT_MPEG2               = 0x0A000000UL,
+    AUDIO_FORMAT_DTS                 = 0x0B000000UL,
+    AUDIO_FORMAT_ATRAC               = 0x0C000000UL,
+    AUDIO_FORMAT_OBA                 = 0x0D000000UL,
+    AUDIO_FORMAT_DDPLUS              = 0x0E000000UL,
+    AUDIO_FORMAT_DTS_HD              = 0x0F000000UL,
+    AUDIO_FORMAT_MAT                 = 0x10000000UL,
+    AUDIO_FORMAT_DST                 = 0x11000000UL,
+    AUDIO_FORMAT_WMA_PRO             = 0x12000000UL,
+#endif
+
     AUDIO_FORMAT_MAIN_MASK           = 0xFF000000UL,
     AUDIO_FORMAT_SUB_MASK            = 0x00FFFFFFUL,
 
