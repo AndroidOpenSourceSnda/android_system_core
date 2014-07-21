@@ -46,6 +46,9 @@ typedef enum {
     AUDIO_STREAM_ENFORCED_AUDIBLE = 7, /* Sounds that cannot be muted by user and must be routed to speaker */
     AUDIO_STREAM_DTMF             = 8,
     AUDIO_STREAM_TTS              = 9,
+#ifdef STE_AUDIO
+    AUDIO_STREAM_VIDEO_CALL       = 10, /* Audio stream to be used for VT-call */
+#endif
 
     AUDIO_STREAM_CNT,
     AUDIO_STREAM_MAX              = AUDIO_STREAM_CNT - 1,
