@@ -127,6 +127,20 @@ LOCAL_SRC_FILES := $(commonSources) \
         uevent.c
 
 ifeq ($(TARGET_ARCH),arm)
+#
+# Define NEON_UNALIGNED_ACCESS to indicate to library it
+# could do unaligned memory access in Neon instructions.
+#
+ifeq ($(ARCH_ARM_NEON_SUPPORTS_UNALIGNED_ACCESS),true)
+LOCAL_CFLAGS += -DNEON_UNALIGNED_ACCESS
+endif
+#
+# Define MEMSET_NEON_DIVIDER to set a size limit for the Neon version
+# Only sizes below this limit uses the Neon version.
+#
+ifneq ($(strip $(LIBCUTILS_MEMSET32_NEON_DIVIDER)),)
+LOCAL_CFLAGS += -DMEMSET_NEON_DIVIDER=$(strip $(LIBCUTILS_MEMSET32_NEON_DIVIDER))
+endif
 LOCAL_SRC_FILES += arch-arm/memset32.S
 else  # !arm
 ifeq ($(TARGET_ARCH),sh)

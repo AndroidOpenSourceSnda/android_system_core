@@ -13,14 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/* Copyright (C) ST-Ericsson SA 2011
+ *
+ * Added Neon hybrid implementation
+ */
 /*
  *  memset32.S
  *
  */
 
+#include <machine/asm.h>
+#include <machine/cpu-features.h>
+
     .text
     .align
-
+#if defined(__ARM_NEON__)
+    .fpu    neon
+#endif
     .global android_memset32
     .type   android_memset32, %function
     .global android_memset16
@@ -51,6 +60,64 @@ android_memset16:
 
 android_memset32:
         .fnstart
+#if defined(__ARM_NEON__) && defined(MEMSET_NEON_DIVIDER)
+        cmp         r2, #MEMSET_NEON_DIVIDER
+        bhi         android_memset32_arm
+
+        vdup.32     q0, r1
+
+#ifndef NEON_UNALIGNED_ACCESS
+        /* do we have at least 16-bytes to write (needed for alignment below) */
+        cmp         r2, #16
+        blo         3f
+
+        /* align destination to 16 bytes for the write-buffer */
+        rsb         r3, r0, #0
+        ands        r3, r3, #0xF
+        beq         2f
+
+        /* write up to 15-bytes (count in r3) */
+        sub         r2, r2, r3
+        tst         r3, #2
+        strneh      r1, [r0], #2
+        movs        ip, r3, lsl #28
+        strmi       r1, [r0], #4
+        bcc         1f
+        vst1.32     {d0}, [r0, :64]!
+1:
+#endif
+        /* make sure we have at least 32 bytes to write */
+        subs        r2, r2, #32
+        blo         2f
+        vmov        q1, q0
+
+1:      /* The main loop writes 32 bytes at a time */
+        subs        r2, r2, #32
+#ifndef NEON_UNALIGNED_ACCESS
+        vst1.32     {d0 - d3}, [r0, :128]!
+#else
+        vst1.32     {d0 - d3}, [r0]!
+#endif
+        bhs         1b
+
+2:      /* less than 32 left */
+        add         r2, r2, #32
+3:      movs        ip, r2, lsl #28
+        bcc         1f
+#ifndef NEON_UNALIGNED_ACCESS
+        vst1.32     {d0, d1}, [r0, :128]!
+#else
+        vst1.32     {d0, d1}, [r0]!
+#endif
+1:      bge         2f
+        vst1.32     {d0}, [r0]!
+2:      movs        ip, r2, lsl #30
+        strcs       r1, [r0], #4
+        strmih      r1, [r0], #2
+        bx          lr
+
+android_memset32_arm:
+#endif
         .save       {lr}
         str         lr, [sp, #-4]!
 
