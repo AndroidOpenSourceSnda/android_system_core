@@ -77,6 +77,9 @@
 #define AID_NET_BW_STATS  3006  /* read bandwidth statistics */
 #define AID_NET_BW_ACCT   3007  /* change bandwidth statistics accounting */
 
+/* 5000 series claimed for OEM use */
+#define AID_DBUS_ACCESS   5001  /* access to dbus */
+
 #define AID_MISC          9998  /* access to misc storage */
 #define AID_NOBODY        9999
 
@@ -134,6 +137,7 @@ static const struct android_id_info android_ids[] = {
     { "net_bw_acct", AID_NET_BW_ACCT, },
     { "misc",      AID_MISC, },
     { "nobody",    AID_NOBODY, },
+    { "dbus_access", AID_DBUS_ACCESS, },
 };
 
 #define android_id_count \
